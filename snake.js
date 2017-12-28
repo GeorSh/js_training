@@ -3,78 +3,80 @@ const ctx = canvas.getContext("2d");
 const width = canvas.width;
 const height = canvas.height;
 document.addEventListener('keydown', keyPush);
-setInterval(game, 1000 / 15);
+setInterval(game, 1000 / 10);
 
-var xv = yv = 0;
-var px = py = 10;
-var gs = tc = 20;
-var ax = ay = 15;
+var xVector = yVector = 0;
+var positionX = positionY = 10;
+var gameSize = tileCount = 20;
+var eatPostionX = Math.floor(Math.random() * 19);
+var eatPostionY = Math.floor(Math.random() * 19);
 var trail = [];
 var tail = 2;
+var score = 0;
 
 function game(){
-  px += xv;
-  py += yv;
-  if(px < 0){
-    px = tc - 1;
+  positionX += xVector;
+  positionY += yVector;
+  if(positionX < 0){
+    positionX = tileCount - 1;
   }
-  if(px > tc - 1){
-    px = 0;
+  if(positionX > tileCount - 1){
+    positionX = 0;
   }
-  if(py < 0){
-    py = tc - 1;
+  if(positionY < 0){
+    positionY = tileCount - 1;
   }
-  if(py > tc - 1){
-    py = 0;
+  if(positionY > tileCount - 1){
+    positionY = 0;
   }
   ctx.fillStyle = 'black';
   ctx.fillRect(0, 0, width, height);
 
   ctx.fillStyle = 'lime';
   for(let i = 0; i < trail.length; i++){
-    ctx.fillRect(trail[i].x * gs, trail[i].y * gs, gs - 2, gs - 2);
-    if(trail[i].x == px && trail[i].y == py){
+    ctx.fillRect(trail[i].x * gameSize, trail[i].y * gameSize, gameSize - 2, gameSize - 2);
+    if(trail[i].x == positionX && trail[i].y == positionY){
       tail = 2;
     }
   }
 
   trail.push({
-    x : px, 
-    y : py
+    x : positionX,
+    y : positionY
   });
-  
+
   while(trail.length > tail){
     trail.shift();
   }
-  
-  if(ax == px && ay == py){
+
+  if(eatPostionX == positionX && eatPostionY == positionY){
     tail++;
-    ax = Math.floor(Math.random() * tc);
-    ay = Math.floor(Math.random() * tc);
+    eatPostionX = Math.floor(Math.random() * tileCount);
+    eatPostionY = Math.floor(Math.random() * tileCount);
   }
 
   ctx.fillStyle = 'red';
-  ctx.fillRect(ax * gs, ay * gs, gs - 2, gs - 2);
-  
+  ctx.fillRect(eatPostionX * gameSize, eatPostionY * gameSize, gameSize - 2, gameSize - 2);
+
 }
 
 function keyPush(event){
   switch(event.keyCode) {
     case 37:
-      xv = -1;
-      yv = 0;
+      xVector = -1;
+      yVector = 0;
       break;
     case 38:
-      xv = 0;
-      yv = -1;
+      xVector = 0;
+      yVector = -1;
       break;
     case 39:
-      xv = 1;
-      yv = 0;
+      xVector = 1;
+      yVector = 0;
       break;
     case 40:
-      xv = 0;
-      yv = 1;
+      xVector = 0;
+      yVector = 1;
       break;
   }
 
